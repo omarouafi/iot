@@ -3,3 +3,41 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+modules_index:
+  path: /modules
+  controller: App\Controller\ModuleController::index
+
+module_create:
+  path: /modules/create
+  controller: App\Controller\ModuleController::create
+  methods: [GET, POST]
+
+module_edit_view:
+  path: /modules/{id}/edit
+  controller: App\Controller\ModuleController::edit_view
+  methods: GET
+
+module_edit:
+  path: /modules/{id}/edit
+  controller: App\Controller\ModuleController::edit
+  methods: POST
+
+module_delete:
+  path: /modules/{id}/delete
+  controller: App\Controller\ModuleController::delete
+  methods: GET
+
+app_module_details:
+    path: '/modules/{id}/details'
+    controller: 'App\Controller\ModuleController::details'
+    methods: ['GET']
+    requirements:
+        id: '\d+'
+
+not_found:
+    path: /{any}
+    controller: App\Controller\ModuleController::redirectToModules
+    requirements:
+        any: .*
+

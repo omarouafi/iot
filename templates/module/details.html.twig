@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Module Detail{% endblock %}
+
+{% block body %}
+
+    {% for flashMessage in app.flashes('success') %}
+        <div class="alert alert-success">{{ flashMessage }}</div>
+    {% endfor %}
+    {% for flashMessage in app.flashes('error') %}
+        <div class="alert alert-danger">{{ flashMessage }}</div>
+    {% endfor %}
+
+<div class="container p-4">
+<a href="/modules" class="btn btn-primary mb-3">Back to Modules</a>
+    <h1>Module Details</h1>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>Name:</th>
+            <td>{{ module.name }}</td>
+        </tr>
+        <tr>
+            <th>Description:</th>
+            <td>{{ module.description }}</td>
+        </tr>
+        <tr>
+            <th>Mesure Type:</th>
+            <td>{{ module.mesureType }}</td>
+        </tr>
+    </table>
+
+    <a href="/modules/{{ module.id }}/edit" class="btn btn-primary">Edit</a>
+
+    <a href="/modules/{{ module.id }}/delete" class="btn btn-danger">Supprimer</a>
+
+
+     <div class="mt-5">
+        <h3>Module Mesures</h3>
+        <canvas id="chart"></canvas>
+    </div>
+
+            <h3>Historique de Fonctionnement</h3>
+    <table class="table table-bordered mt-5">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fonctionnement in fonctionnements %}
+                    <tr>
+                        <td>{{ fonctionnement.getCreatedAt()|date('d m Y') }}</td>
+                        <td>
+                            {% if fonctionnement.status == 'OK' %}
+                                <span class="badge bg-success">{{ fonctionnement.status }}</span>
+                            {% elseif fonctionnement.status == 'Failure' %}
+                                <span class="badge bg-danger">{{ fonctionnement.status }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ fonctionnement.status }}</span></h1>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var measurements = {{ mesures|raw }};
+        
+        var dates = measurements.map(measure => measure.createdAt);
+
+        var ctx = document.getElementById('chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Measurements',
+                    data: measurements.map(measure => measure.value),
+                    backgroundColor: 'rgba(0, 123, 255, 0.4)',
+                    borderColor: 'rgba(0, 123, 255, 1)',
+                    borderWidth: 1,
+                    pointRadius: 4,
+                    pointBackgroundColor: 'rgba(0, 123, 255, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverRadius: 6,
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(0, 123, 255, 1)',
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Measurement Value'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+
+</div>
+
+{% endblock %}

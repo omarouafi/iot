@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modules{% endblock %}
+
+{% block body %}
+
+<div class="container p-4">
+
+  {# Display flash messages #}
+    {% for flashMessage in app.flashes('success') %}
+        <div class="alert alert-success">{{ flashMessage }}</div>
+    {% endfor %}
+    {% for flashMessage in app.flashes('error') %}
+        <div class="alert alert-danger">{{ flashMessage }}</div>
+    {% endfor %}
+
+    <form action="{{ path('module_create') }}" method="POST" class="m-4" >
+        <h2>Créer un module</h2>
+        <div class="mb-3">
+            <label for="name" class="form-label">Nom :</label>
+            <input type="text" id="name" name="name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description :</label>
+            <textarea id="description" name="description" class="form-control" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="mesure" class="form-label">Type Mesure :</label>
+            <select id="mesure" name="type" class="form-select" required>
+                <option value="Température">Température</option>  
+                <option value="Vitesse">Vitesse</option>  
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Créer</button>
+    </form>
+    <div>
+    
+    <h2>Modules existants</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>     
+            {% for module in modules %}
+                <tr>
+                    <td>{{ module.name }}</td>
+                    <td>{{ module.description }}</td>
+                    <td>{{ module.getMesureType() }}</td>
+                    <td>
+                        <a href="/modules/{{ module.id }}/edit" class="btn btn-primary">Modifier</a>
+                        <a href="/modules/{{ module.id }}/details" class="btn btn-secondary">Details</a>
+                        <a href="/modules/{{ module.id }}/delete" class="btn btn-danger">Supprimer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+
+{% endblock %}

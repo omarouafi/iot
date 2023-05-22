@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Module{% endblock %}
+
+{% block body %}
+
+<div class="container p-4">
+    <a href="/modules" class="btn btn-primary mb-3">Back to Modules</a>
+    <h1>Module Edit</h1>
+
+    <form action="/modules/{{ module.id }}/edit" method="post">
+        <div class="mb-3">
+            <label for="name" class="form-label">Nom :</label>
+            <input type="text" id="name" name="name" value="{{ module.name }}" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description :</label>
+            <textarea id="description" name="description" class="form-control" required>{{ module.description }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="type" class="form-label">Type :</label>
+            <select id="type" name="type" class="form-select" required>
+                <option value="Température" {% if module.mesureType == 'Température' %}selected{% endif %}>Température</option>
+                <option value="Vitesse" {% if module.mesureType == 'Vitesse' %}selected{% endif %}>Vitesse</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Modifier</button>
+    </form>
+</div>
+
+{% endblock %}
